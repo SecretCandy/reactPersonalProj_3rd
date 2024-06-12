@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components"
+import { register } from "../lib/api/auth";
 
 const Container = styled.div`
     max-width: 400px;
@@ -56,7 +57,7 @@ export default function SignUp() {
     const [nickname, setNickname] = useState("");
     const navigate = useNavigate();
 
-    const handleSignUp = () => {
+    const handleSignUp = async() => {
         if (id.length < 4 || id.length > 10) {
             alert("아이디는 4글자에서 10글자 이내로만 가능합니다!");
             return;
@@ -73,7 +74,12 @@ export default function SignUp() {
         }
 
         // API 호출을 진짜로 하는 부분
-        console.log("회원가입 API 호출!!!!");
+        const response = await register({
+            id: id,
+            password: password,
+            nickname: nickname,
+        });
+        console.log("회원가입 API 응답값 :", response);
     };
 
     return (
