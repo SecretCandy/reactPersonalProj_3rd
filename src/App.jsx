@@ -6,6 +6,7 @@ import "./App.css";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import { getUserInfo } from "./lib/api/auth";
+import Layout from "./components/Layout";
 
 function App() {
   const [expenses, setExpenses] = useState([
@@ -70,40 +71,23 @@ function App() {
 
   const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    getUserInfo().then((res) => {
-      if (res) {
-        setUser({
-          userId: res.id,
-          nickname: res.nickname,
-          avatar: res.avatar,
-        })
-      }
-    })
-  }, [])
-
-  console.log("로그인된 유저 정보 :", user)
-
   return (
     <>
       <BrowserRouter>
         <Routes>
-          <Route
-            path="/"
-            element={<Home expenses={expenses} setExpenses={setExpenses} />}
-          />
-          <Route
-            path="/detail/:id"
-            element={<Detail expenses={expenses} setExpenses={setExpenses} />}
-          />
-          <Route
-            path="/sign_in"
-            element={<SignIn setUser={setUser} />}
-          />
-          <Route
-            path="/sign_up"
-            element={<SignUp />}
-          />
+          <Route path="/" element={<Layout user={user} setUser={setUser} />}>
+            <Route
+              index
+              element={<Home expenses={expenses} setExpenses={setExpenses} />}
+            />
+            <Route
+              path="/detail/:id"
+              element={<Detail expenses={expenses} setExpenses={setExpenses} />}
+            />
+          </Route>
+
+          <Route path="/sign_in" element={<SignIn setUser={setUser} />} />
+          <Route path="/sign_up" element={<SignUp />} />
         </Routes>
       </BrowserRouter>
     </>
