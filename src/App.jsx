@@ -1,11 +1,11 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Detail from "./pages/Detail";
-import { useState } from "react";
-import { v4 as uuidv4 } from "uuid";
+import { useEffect, useState } from "react";
 import "./App.css";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
+import { getUserInfo } from "./lib/api/auth";
 
 function App() {
   const [expenses, setExpenses] = useState([
@@ -68,6 +68,22 @@ function App() {
     },
   ]);
 
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    getUserInfo().then((res) => {
+      if (res) {
+        setUser({
+          userId: res.id,
+          nickname: res.nickname,
+          avatar: res.avatar,
+        })
+      }
+    })
+  }, [])
+
+  console.log("로그인된 유저 정보 :", user)
+
   return (
     <>
       <BrowserRouter>
@@ -82,7 +98,7 @@ function App() {
           />
           <Route
             path="/sign_in"
-            element={<SignIn />}
+            element={<SignIn setUser={setUser} />}
           />
           <Route
             path="/sign_up"

@@ -79,7 +79,10 @@ export default function SignUp() {
             password: password,
             nickname: nickname,
         });
-        console.log("회원가입 API 응답값 :", response);
+        if (response) {
+            confirm("회원가입이 완료되었습니다.")
+            navigate("/sign_in")
+        }
     };
 
     return (

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components"
+import { login } from "../lib/api/auth";
 
 const Container = styled.div`
     max-width: 400px;
@@ -50,14 +51,19 @@ const ToggleButton = styled.button`
     cursor: pointer;
 `;
 
-export default function SignIn() {
+export default function SignIn({setUser}) {
     const [id, setId] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
 
-    const handleSignIn = () => {
-        console.log("id : ", id);
-        console.log("password : ", password);
+    // 로그인 버튼 클릭시 , 
+    const handleSignIn = async () => {
+        const { userId, nickname, avatar } = await login({
+            id,
+            password,
+        });
+
+        setUser({ userId, nickname, avatar });
     };
 
     return (
@@ -79,7 +85,7 @@ export default function SignIn() {
                 />
             </InputGroup>
             <Button onClick={handleSignIn}>로그인</Button>
-            <ToggleButton onClick={() => {navigate("/sign_up")}}>회원가입</ToggleButton>
+            <ToggleButton onClick={() => { navigate("/sign_up") }}>회원가입</ToggleButton>
         </Container>
     )
 }
