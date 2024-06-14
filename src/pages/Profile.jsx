@@ -1,5 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
+import { updateProfile } from "../lib/api/auth";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
     max-width: 400px;
@@ -35,14 +37,26 @@ const Button = styled.button`
     margin-bottom: 10px;
 `;
 
-export default function Profile() {
+export default function Profile({ user, setUser }) {
     const [nickname, setNickname] = useState("");
     const [avatar, setAvatar] = useState(null);
+    const navigate = useNavigate();
 
-    const handelUpdateProfile = () => {
-        console.log(nickname)
-        console.log(avatar)
-    }
+    const handelUpdateProfile = async () => {
+        const formData = new FormData();
+        formData.append("nickname", nickname);
+        formData.append("avatar", avatar);
+        const response = await updateProfile(formData)
+
+        if (response.success) {
+            setUser({
+                ...user,
+                nickname: response.nickname,
+                avatar: response.avatar,
+            });
+            navigate("/");
+        };
+    };
 
     return (
         <Container>
